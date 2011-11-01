@@ -41,6 +41,7 @@ class AttachmentTaxSupp {
 	 * Creates 'attachment_tag' and 'attachment_category' taxonomies.
 	 */
 	function setup_taxonomies() {
+		$attachment_taxonomies = array();
 		$labels = array(
 			'name'              => _x( 'Attachment Tags', 'taxonomy general name' ),
 			'singular_name'     => _x( 'Attachment Tag', 'taxonomy singular name' ),
@@ -54,13 +55,18 @@ class AttachmentTaxSupp {
 			'new_item_name'     => __( 'New Attachment Tag Name' ),
 			'menu_name'         => __( 'Attachment Tags' ),
 		);
-		register_taxonomy( 'attachment_tag', 'attachment', array(
+		$args = array(
 			'hierarchical' => false,
 			'labels'       => $labels,
 			'show_ui'      => true,
 			'query_var'    => true,
 			'rewrite'      => true,
-		) );
+		);
+		$attachment_taxonomies[] = array(
+			'taxonomy'  => 'attachment_tag',
+			'post_type' => 'attachment',
+			'args'      => $args
+		);
 		$labels = array(
 			'name'              => _x( 'Attachment Categories', 'taxonomy general name' ),
 			'singular_name'     => _x( 'Attachment Category', 'taxonomy singular name' ),
@@ -74,13 +80,22 @@ class AttachmentTaxSupp {
 			'new_item_name'     => __( 'New Attachment Category Name' ),
 			'menu_name'         => __( 'Attachment Category' ),
 		);
-		register_taxonomy( 'attachment_category', 'attachment', array(
+		$args = array(
 			'hierarchical' => true,
 			'labels'       => $labels,
 			'show_ui'      => true,
 			'query_var'    => true,
 			'rewrite'      => true,
-		) );
+		);
+		$attachment_taxonomies[] = array(
+			'taxonomy'  => 'attachment_category',
+			'post_type' => 'attachment',
+			'args'      => $args
+		);
+		$attachment_taxonomies = apply_filters( 'attachmenttaxsupp_taxonomies', $attachment_taxonomies );
+		foreach ( $attachment_taxonomies as $attachment_taxonomy ) {
+			register_taxonomy( $attachment_taxonomy['taxonomy'], $attachment_taxonomy['post_type'], $attachment_taxonomy['args'] );
+		}
 	}
 	
 }

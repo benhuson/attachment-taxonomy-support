@@ -1,5 +1,39 @@
 <?php
 
+class AttachmentTaxSupp_Walker_Category_Checklist extends Walker {
+	var $tree_type = 'category';
+	var $attachment_id = 0;
+	var $db_fields = array ('parent' => 'parent', 'id' => 'term_id'); //TODO: decouple this
+	
+	function start_lvl(&$output, $depth, $args) {
+		$indent = str_repeat("\t", $depth);
+		$output .= "$indent<ul class='children'>\n";
+	}
+	
+	function end_lvl(&$output, $depth, $args) {
+		$indent = str_repeat("\t", $depth);
+		$output .= "$indent</ul>\n";
+	}
+	
+	function start_el(&$output, $category, $depth, $args) {
+		extract($args);
+		if ( empty($taxonomy) )
+			$taxonomy = 'category';
+		
+		if ( $taxonomy == 'category' )
+			$name = 'post_category';
+		else
+			$name = 'tax_input['.$taxonomy.']';
+		
+		$class = in_array( $category->term_id, $popular_cats ) ? ' class="popular-category"' : '';
+		$output .= "\n<li id='{$this->attachment_id}-{$taxonomy}-{$category->term_id}'$class>" . '<label class="selectit"><input value="' . $category->term_id . '" type="checkbox" name="'.$name.'['.$this->attachment_id.'][]" id="in-'.$this->attachment_id.'-'.$taxonomy.'-' . $category->term_id . '"' . checked( in_array( $category->term_id, $selected_cats ), true, false ) . disabled( empty( $args['disabled'] ), false, false ) . ' /> ' . esc_html( apply_filters('the_category', $category->name )) . '</label>';
+	}
+	
+	function end_el(&$output, $category, $depth, $args) {
+		$output .= "</li>\n";
+	}
+}
+  
 class AttachmentTaxSupp_Admin {
 	
 	/**
@@ -23,8 +57,11 @@ class AttachmentTaxSupp_Admin {
 				if ( $val['hierarchical'] == true) {
 					//$popular_ids = wp_popular_terms_checklist( $tax_name );
 					ob_start();
-					//wp_terms_checklist( $post->ID, array( 'taxonomy' => $tax_name, 'popular_cats' => $popular_ids ) );
-					wp_terms_checklist( $post->ID, array( 'taxonomy' => $tax_name ) );
+					//wp_terms_checklist( $post->ID, array( 'taxonomy' => $tax_name, 'popular_cats' => $popular_ids, 'walker' => new AttachmentTaxSupp_Walker_Category_Checklist ) );
+					
+					$wp_terms_checklist_walker = new AttachmentTaxSupp_Walker_Category_Checklist;
+					$wp_terms_checklist_walker->attachment_id = $post->ID;
+					wp_terms_checklist( $post->ID, array( 'taxonomy' => $tax_name, 'walker' => $wp_terms_checklist_walker ) );
 					$checklist = ob_get_contents();
 					ob_end_clean();
 			
@@ -110,12 +147,15 @@ class AttachmentTaxSupp_Admin {
 	
 	/**
 	 * Save Image Form
+	 * @todo If some checkboxes are checked and you uncheck all on a media page, it doesn't save
 	 */
 	function attachment_fields_to_save( $post, $attachment ) {
 		if ( isset( $_POST['tax_input'] ) && is_array( $_POST['tax_input'] ) ) {
-			foreach ( $_POST['tax_input'] as $tax => $val ) {
+			foreach ( $_POST['tax_input'] as $tax => $arr ) {
 				if ( taxonomy_exists( $tax ) ) {
-					$val = array_map( 'absint', $val );
+					$val = null;
+					if ( isset( $arr[$post['ID']] ) )
+						$val = array_map( 'absint', $arr[$post['ID']] );
 					wp_set_object_terms( $post['ID'], $val, $tax );
 				}
 			}

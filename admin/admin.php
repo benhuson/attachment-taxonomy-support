@@ -110,6 +110,7 @@ class AttachmentTaxSupp_Admin {
 					*/
 					$html .= '
 						</div>
+						<p><a href="' . admin_url( '/edit-tags.php?taxonomy=' . $tax_name ) . '">Manage ' . $taxonomy->labels->name . '</a></p>
 					</div>';
 					$form_fields[$key]['input'] = 'html';
 					$form_fields[$key]['html'] = $html;
@@ -137,6 +138,7 @@ class AttachmentTaxSupp_Admin {
 						$html .= '<p class="hide-if-no-js"><a href="#titlediv" class="tagcloud-link" id="link-' . $tax_name . '">' . $taxonomy->labels->choose_from_most_used . '</a></p>';
 					endif;
 					$html .= '</div>';
+					$html .= '<p><a href="' . admin_url( '/edit-tags.php?taxonomy=' . $tax_name ) . '">Manage ' . $taxonomy->labels->name . '</a></p>';
 					$form_fields[$key]['input'] = 'html';
 					$form_fields[$key]['html'] = $html;
 				}

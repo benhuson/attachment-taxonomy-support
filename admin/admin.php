@@ -112,6 +112,7 @@ class AttachmentTaxSupp_Admin {
 						</div>
 						<p><a href="' . admin_url( '/edit-tags.php?taxonomy=' . $tax_name ) . '">Manage ' . $taxonomy->labels->name . '</a></p>
 					</div>';
+					$html .= wp_nonce_field( 'update_attachment', '_wpnonce_attachmenttaxsupp', true, false );
 					$form_fields[$key]['input'] = 'html';
 					$form_fields[$key]['html'] = $html;
 				} else {
@@ -139,6 +140,7 @@ class AttachmentTaxSupp_Admin {
 					endif;
 					$html .= '</div>';
 					$html .= '<p><a href="' . admin_url( '/edit-tags.php?taxonomy=' . $tax_name ) . '">Manage ' . $taxonomy->labels->name . '</a></p>';
+					$html .= wp_nonce_field( 'update_attachment', '_wpnonce_attachmenttaxsupp', true, false );
 					$form_fields[$key]['input'] = 'html';
 					$form_fields[$key]['html'] = $html;
 				}
@@ -152,6 +154,10 @@ class AttachmentTaxSupp_Admin {
 	 * @todo If some checkboxes are checked and you uncheck all on a media page, it doesn't save
 	 */
 	function attachment_fields_to_save( $post, $attachment ) {
+		
+		if ( empty( $_POST ) || !wp_verify_nonce( $_POST['_wpnonce_attachmenttaxsupp'], 'update_attachment' ) )
+			return $post;
+	
 		if ( isset( $_POST['tax_input'] ) && is_array( $_POST['tax_input'] ) ) {
 			foreach ( $_POST['tax_input'] as $tax => $arr ) {
 				if ( taxonomy_exists( $tax ) ) {
@@ -161,7 +167,16 @@ class AttachmentTaxSupp_Admin {
 					wp_set_object_terms( $post['ID'], $val, $tax );
 				}
 			}
+		} else {
+			$taxes = get_taxonomies( array(
+				'show_ui' => true,
+				'_builtin' => false )
+			);
+			foreach ( $taxes as $tax ) {
+				wp_set_object_terms( $post['ID'], array(), $tax );
+			}
 		}
+		
 		return $post;
 	}
 	

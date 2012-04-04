@@ -41,9 +41,50 @@ class AttachmentTaxSupp_Admin {
 	 */
 	function AttachmentTaxSupp_Admin() {
 		global $AttachmentTaxSupp;
+		add_action( 'admin_init', array( $this, 'admin_init' ) );
+		add_action( 'admin_menu', array( $this, 'add_media_taxonomy_menus' ) );
 		add_filter( 'attachment_fields_to_edit', array( $this, 'attachment_fields_to_edit' ), null, 2 );
 		add_filter( 'attachment_fields_to_save', array( $this, 'attachment_fields_to_save' ), null, 2 );
 		wp_enqueue_script( 'media_taxonomies', plugins_url( dirname( $AttachmentTaxSupp->plugin_basename ) . '/admin/js/admin.js' ), array( 'jquery', 'suggest', 'post' ) );
+	}
+	
+	/**
+	 * Redirect to edit taxonomy
+	 * This is a bit hacky. Would be nice if taxonomy menu items were
+	 * added automatically like for posts.
+	 */
+	function admin_init() {
+		if ( isset( $_GET['page'] ) && 'attachmenttaxsupp_' == substr( $_GET['page'], 0, 18 ) ) {
+			$tax = substr( $_GET['page'], 18 );
+			if ( taxonomy_exists( $tax ) ) {
+				if ( is_network_admin() ) {
+					$tax_url = network_admin_url( 'edit-tags.php?taxonomy=' . $tax );
+				} else {
+					$tax_url = admin_url( 'edit-tags.php?taxonomy=' . $tax );
+				}
+				wp_redirect( $tax_url );
+				exit;
+			}
+		}
+	}
+	
+	/**
+	 * Add Media Taxonomy Menus
+	 *
+	 * @todo Check if taxonomy has UI etc.
+	 */
+	function add_media_taxonomy_menus() {
+		foreach ( get_taxonomies( array( 'object_type' => array( 'attachment' ) ), 'objects' ) as $tax ) {
+			add_submenu_page( 'upload.php', $tax->label, $tax->labels->menu_name, 'edit_posts', 'attachmenttaxsupp_' . $tax->name, array( $this, 'media_taxonomy_edit_page' ) ); 
+		}
+	}
+	
+	/**
+	 * Media Taxonomy Page
+	 * This is just a plceholder function
+	 * as we actually redirect here instead.
+	 */
+	function media_taxonomy_edit_page() {
 	}
 	
 	/**

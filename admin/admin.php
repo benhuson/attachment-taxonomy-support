@@ -3,21 +3,24 @@
 class AttachmentTaxSupp_Walker_Category_Checklist extends Walker {
 	var $tree_type = 'category';
 	var $attachment_id = 0;
-	var $db_fields = array ('parent' => 'parent', 'id' => 'term_id'); //TODO: decouple this
+	var $db_fields = array(
+		'parent' => 'parent',
+		'id' => 'term_id'
+	); //TODO: decouple this
 	
-	function start_lvl(&$output, $depth, $args) {
-		$indent = str_repeat("\t", $depth);
+	function start_lvl( &$output, $depth, $args ) {
+		$indent = str_repeat( "\t", $depth );
 		$output .= "$indent<ul class='children'>\n";
 	}
 	
-	function end_lvl(&$output, $depth, $args) {
-		$indent = str_repeat("\t", $depth);
+	function end_lvl( &$output, $depth, $args ) {
+		$indent = str_repeat( "\t", $depth );
 		$output .= "$indent</ul>\n";
 	}
 	
-	function start_el(&$output, $category, $depth, $args) {
-		extract($args);
-		if ( empty($taxonomy) )
+	function start_el( &$output, $category, $depth, $args ) {
+		extract( $args );
+		if ( empty( $taxonomy ) )
 			$taxonomy = 'category';
 		
 		if ( $taxonomy == 'category' )
@@ -29,7 +32,7 @@ class AttachmentTaxSupp_Walker_Category_Checklist extends Walker {
 		$output .= "\n<li id='{$this->attachment_id}-{$taxonomy}-{$category->term_id}'$class>" . '<label class="selectit"><input value="' . $category->term_id . '" type="checkbox" name="'.$name.'['.$this->attachment_id.'][]" id="in-'.$this->attachment_id.'-'.$taxonomy.'-' . $category->term_id . '"' . checked( in_array( $category->term_id, $selected_cats ), true, false ) . disabled( empty( $args['disabled'] ), false, false ) . ' /> ' . esc_html( apply_filters('the_category', $category->name )) . '</label>';
 	}
 	
-	function end_el(&$output, $category, $depth, $args) {
+	function end_el( &$output, $category, $depth, $args ) {
 		$output .= "</li>\n";
 	}
 }
@@ -41,13 +44,118 @@ class AttachmentTaxSupp_Admin {
 	 */
 	function AttachmentTaxSupp_Admin() {
 		global $AttachmentTaxSupp;
+		add_action( 'admin_init', array( $this, 'admin_init' ) );
+		add_action( 'admin_menu', array( $this, 'add_media_taxonomy_menus' ) );
 		add_filter( 'attachment_fields_to_edit', array( $this, 'attachment_fields_to_edit' ), null, 2 );
 		add_filter( 'attachment_fields_to_save', array( $this, 'attachment_fields_to_save' ), null, 2 );
+		add_filter( 'get_edit_term_link', array( $this, 'get_edit_term_link' ), 10, 4 );
+		add_action( 'admin_head', array( $this, 'admin_head_edit_tags' ) );
+		add_filter( 'admin_body_class', array( $this, 'admin_body_class' ), 20 );
 		wp_enqueue_script( 'media_taxonomies', plugins_url( dirname( $AttachmentTaxSupp->plugin_basename ) . '/admin/js/admin.js' ), array( 'jquery', 'suggest', 'post' ) );
 	}
 	
 	/**
+	 * Admin Body Classes
+	 * Add a 'attachmenttaxsupp' class to make it easy to hook using jQuery.
+	 *
+	 * @param string $classes Classes.
+	 * @return string Classes.
+	 */
+	function admin_body_class( $classes ) {
+		global $current_screen;
+		if ( 'edit-tags' == $current_screen->base && 'attachment' == $current_screen->post_type ) {
+			$classes .= ' attachmenttaxsupp';
+		}
+		return $classes;
+	}
+	
+	/**
+	 * Admin Head - Edit Tags
+	 * Add a JavaScript variable so that we can check which menus
+	 * to show/hide with jQuery.
+	 */
+	function admin_head_edit_tags() {
+		global $current_screen;
+		if ( 'edit-tags' == $current_screen->base && 'attachment' == $current_screen->post_type ) {
+			?>
+			<script type="text/javascript">
+			var attachmentTaxSuppSettings = {
+				'taxonomy': '<?php echo $current_screen->taxonomy; ?>'
+			}
+			</script>
+			<?php
+		}
+	}
+	
+	/**
+	 * Get Edit Term Link Filter
+	 * Ensure that we add a post_type=attachment arg to the edit URLs
+	 * when needed to we can track the state for admin menus etc.
+	 *
+	 * @param string $location Edit link.
+	 * @param string $term_id Term.
+	 * @param string $taxonomy Taxonomy.
+	 * @param string $object_type Post type.
+	 * @return Edit link.
+	 */
+	function get_edit_term_link( $location, $term_id, $taxonomy, $object_type ) {
+		$tax = get_taxonomy( $taxonomy );
+		if ( ! in_array( $object_type, $tax->object_type ) ) {
+			if ( isset( $_GET['post_type'] ) && 'attachment' == $_GET['post_type'] && in_array( 'attachment', $tax->object_type ) ) {
+				$object_type = 'attachment';
+			} else {
+				$object_type = $tax->object_type[0];
+			}
+			return add_query_arg( 'post_type', $object_type, $location );
+		}
+		return $location;
+	}
+	
+	/**
+	 * Redirect to edit taxonomy
+	 * This is a bit hacky. Would be nice if taxonomy menu items were
+	 * added automatically like for posts.
+	 */
+	function admin_init() {
+		if ( isset( $_GET['page'] ) && 'attachmenttaxsupp_' == substr( $_GET['page'], 0, 18 ) ) {
+			$tax = substr( $_GET['page'], 18 );
+			if ( taxonomy_exists( $tax ) ) {
+				if ( is_network_admin() ) {
+					$tax_url = network_admin_url( 'edit-tags.php?taxonomy=' . $tax );
+				} else {
+					$tax_url = admin_url( 'edit-tags.php?taxonomy=' . $tax );
+				}
+				wp_redirect( add_query_arg( 'post_type', 'attachment', $tax_url ) );
+				exit;
+			}
+		}
+	}
+	
+	/**
+	 * Add Media Taxonomy Menus
+	 *
+	 * @todo Check if taxonomy has UI etc.
+	 */
+	function add_media_taxonomy_menus() {
+		foreach ( get_taxonomies( array( 'object_type' => array( 'attachment' ) ), 'objects' ) as $tax ) {
+			add_submenu_page( 'upload.php', $tax->label, $tax->labels->menu_name, 'edit_posts', 'attachmenttaxsupp_' . $tax->name, array( $this, 'media_taxonomy_edit_page' ) ); 
+		}
+	}
+	
+	/**
+	 * Media Taxonomy Page
+	 * This is just a plceholder function
+	 * as we actually redirect here instead.
+	 */
+	function media_taxonomy_edit_page() {
+	}
+	
+	/**
 	 * Edit Image Form
+	 *
+	 * @param array $form_fields Form fields array.
+	 * @param object $post Post.
+	 * @return array Form fields.
 	 */
 	function attachment_fields_to_edit( $form_fields, $post ) {
 		foreach ( $form_fields as $key => $val ) {
@@ -151,7 +259,12 @@ class AttachmentTaxSupp_Admin {
 	
 	/**
 	 * Save Image Form
+	 *
 	 * @todo If some checkboxes are checked and you uncheck all on a media page, it doesn't save
+	 *
+	 * @param object $post Post.
+	 * @param object $attachment Attchment.
+	 * @return object Post.
 	 */
 	function attachment_fields_to_save( $post, $attachment ) {
 		

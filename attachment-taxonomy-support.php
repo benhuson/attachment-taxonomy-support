@@ -4,7 +4,7 @@
 Plugin Name: Attachment Taxonomy Support
 Plugin URI: https://github.com/benhuson/attachment-taxonomy-support
 Description: Improved taxonomy support for media and attachments.
-Version: 1.0
+Version: 1.1
 Author: Ben Huson
 Author URI: http://www.benhuson.co.uk/
 License: GPLv2 or later

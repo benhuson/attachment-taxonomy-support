@@ -71,7 +71,9 @@ class AttachmentTaxSupp_Admin {
 	 */
 	function admin_body_class( $classes ) {
 		global $current_screen;
-		if ( 'edit-tags' == $current_screen->base && 'attachment' == $current_screen->post_type ) {
+		// This doesn't work in earlier WordPress 3.x branches
+		//if ( 'edit-tags' == $current_screen->base && 'attachment' == $current_screen->post_type ) {
+		if ( 'edit-tags' == $current_screen->base && 'attachment' == $_REQUEST['post_type'] ) {
 			$classes .= ' attachmenttaxsupp';
 		}
 		return $classes;
@@ -84,7 +86,9 @@ class AttachmentTaxSupp_Admin {
 	 */
 	function admin_head_edit_tags() {
 		global $current_screen;
-		if ( 'edit-tags' == $current_screen->base && 'attachment' == $current_screen->post_type ) {
+		// This doesn't work in earlier WordPress 3.x branches
+		//if ( 'edit-tags' == $current_screen->base && 'attachment' == $current_screen->post_type ) {
+		if ( 'edit-tags' == $current_screen->base && 'attachment' == $_REQUEST['post_type'] ) {
 			?>
 			<script type="text/javascript">
 			var attachmentTaxSuppSettings = {
@@ -126,7 +130,10 @@ class AttachmentTaxSupp_Admin {
 	 */
 	function add_media_taxonomy_menus() {
 		foreach ( get_taxonomies( array( 'object_type' => array( 'attachment' ) ), 'objects' ) as $tax ) {
-			add_submenu_page( 'upload.php', $tax->label, $tax->labels->menu_name, 'edit_posts', 'edit-tags.php?taxonomy=' . $tax->name . '&post_type=attachment' ); 
+			// Need to check object type in early WordPress 3.x branches
+			if ( in_array( 'attachment', $tax->object_type ) ) {
+				add_submenu_page( 'upload.php', $tax->label, $tax->labels->menu_name, 'edit_posts', 'edit-tags.php?taxonomy=' . $tax->name . '&post_type=attachment' ); 
+			}
 		}
 	}
 	

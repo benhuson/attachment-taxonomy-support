@@ -88,7 +88,7 @@ class AttachmentTaxSupp_Admin {
 		global $current_screen;
 		// This doesn't work in earlier WordPress 3.x branches
 		//if ( 'edit-tags' == $current_screen->base && 'attachment' == $current_screen->post_type ) {
-		if ( 'edit-tags' == $current_screen->base && 'attachment' == $_REQUEST['post_type'] ) {
+		if ( 'edit-tags' == $current_screen->base && isset( $_REQUEST['post_type'] ) && 'attachment' == $_REQUEST['post_type'] ) {
 			?>
 			<script type="text/javascript">
 			var attachmentTaxSuppSettings = {
@@ -213,7 +213,7 @@ class AttachmentTaxSupp_Admin {
 					*/
 					$html .= '
 						</div>
-						<p><a href="' . admin_url( '/edit-tags.php?taxonomy=' . $tax_name ) . '">Manage ' . $taxonomy->labels->name . '</a></p>
+						<p><a href="' . admin_url( '/edit-tags.php?taxonomy=' . $tax_name . '&post_type=attachment' ) . '">' . __( 'Manage', 'attachmenttaxsupp' ) . ' ' . $taxonomy->labels->name . '</a></p>
 					</div>';
 					$html .= wp_nonce_field( 'update_attachment', '_wpnonce_attachmenttaxsupp', true, false );
 					$form_fields[$key]['input'] = 'html';
@@ -242,7 +242,7 @@ class AttachmentTaxSupp_Admin {
 						$html .= '<p class="hide-if-no-js"><a href="#titlediv" class="tagcloud-link" id="link-' . $tax_name . '">' . $taxonomy->labels->choose_from_most_used . '</a></p>';
 					endif;
 					$html .= '</div>';
-					$html .= '<p><a href="' . admin_url( '/edit-tags.php?taxonomy=' . $tax_name ) . '">Manage ' . $taxonomy->labels->name . '</a></p>';
+					$html .= '<p><a href="' . admin_url( '/edit-tags.php?taxonomy=' . $tax_name . '&post_type=attachment' ) . '">' . __( 'Manage', 'attachmenttaxsupp' ) . ' ' . $taxonomy->labels->name . '</a></p>';
 					$html .= wp_nonce_field( 'update_attachment', '_wpnonce_attachmenttaxsupp', true, false );
 					$form_fields[$key]['input'] = 'html';
 					$form_fields[$key]['html'] = $html;

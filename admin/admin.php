@@ -43,14 +43,23 @@ class AttachmentTaxSupp_Admin {
 	 * Configure Admin
 	 */
 	function AttachmentTaxSupp_Admin() {
-		global $AttachmentTaxSupp;
 		add_action( 'admin_menu', array( $this, 'add_media_taxonomy_menus' ) );
 		add_filter( 'attachment_fields_to_edit', array( $this, 'attachment_fields_to_edit' ), null, 2 );
 		add_filter( 'attachment_fields_to_save', array( $this, 'attachment_fields_to_save' ), null, 2 );
 		add_filter( 'get_edit_term_link', array( $this, 'get_edit_term_link' ), 10, 4 );
 		add_action( 'admin_head', array( $this, 'admin_head_edit_tags' ) );
 		add_filter( 'admin_body_class', array( $this, 'admin_body_class' ), 20 );
-		wp_enqueue_script( 'media_taxonomies', plugins_url( dirname( $AttachmentTaxSupp->plugin_basename ) . '/admin/js/admin.js' ), array( 'jquery', 'suggest', 'post' ) );
+		add_filter( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 20 );
+	}
+	
+	/**
+	 * Admin Enqueue Scripts
+	 */
+	function admin_enqueue_scripts() {
+		global $AttachmentTaxSupp;
+		if ( isset( $_GET['taxonomy'] ) && isset( $_GET['post_type'] ) && 'attachment' == $_GET['post_type'] ) {
+			wp_enqueue_script( 'media_taxonomies', plugins_url( dirname( $AttachmentTaxSupp->plugin_basename ) . '/admin/js/admin.js' ), array( 'jquery', 'suggest', 'post' ) );
+		}
 	}
 	
 	/**

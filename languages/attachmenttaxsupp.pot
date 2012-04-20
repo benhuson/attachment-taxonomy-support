@@ -1,0 +1,99 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Attachment Taxonomy Support\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-04-20 09:12+0100\n"
+"PO-Revision-Date: 2012-04-20 09:19+0100\n"
+"Last-Translator: Ben Huson <ben@thewhiteroom.net>\n"
+"Language-Team: Ben Huson <ben@thewhiteroom.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _e;_x;__;esc_attr_e;esc_attr_x;esc_attr__;esc_html_e;esc_html_x;esc_html__\n"
+"X-Poedit-Basepath: ./\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-Country: UNITED KINGDOM\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../attachment-taxonomy-support.php:48
+msgid "Search Attachment Tags"
+msgstr ""
+
+#: ../attachment-taxonomy-support.php:49
+msgid "All Attachment Tags"
+msgstr ""
+
+#: ../attachment-taxonomy-support.php:50
+msgid "Parent Attachment Tag"
+msgstr ""
+
+#: ../attachment-taxonomy-support.php:51
+msgid "Parent Attachment Tag:"
+msgstr ""
+
+#: ../attachment-taxonomy-support.php:52
+msgid "Edit Attachment Tag"
+msgstr ""
+
+#: ../attachment-taxonomy-support.php:53
+msgid "Update Attachment Tag"
+msgstr ""
+
+#: ../attachment-taxonomy-support.php:54
+msgid "Add New Attachment Tag"
+msgstr ""
+
+#: ../attachment-taxonomy-support.php:55
+msgid "New Attachment Tag Name"
+msgstr ""
+
+#: ../attachment-taxonomy-support.php:56
+msgid "Attachment Tags"
+msgstr ""
+
+#: ../attachment-taxonomy-support.php:73
+msgid "Search Attachment Categories"
+msgstr ""
+
+#: ../attachment-taxonomy-support.php:74
+msgid "All Attachment Categories"
+msgstr ""
+
+#: ../attachment-taxonomy-support.php:75
+msgid "Parent Attachment Category"
+msgstr ""
+
+#: ../attachment-taxonomy-support.php:76
+msgid "Parent Attachment Category:"
+msgstr ""
+
+#: ../attachment-taxonomy-support.php:77
+msgid "Edit Attachment Category"
+msgstr ""
+
+#: ../attachment-taxonomy-support.php:78
+msgid "Update Attachment Category"
+msgstr ""
+
+#: ../attachment-taxonomy-support.php:79
+msgid "Add New Attachment Category"
+msgstr ""
+
+#: ../attachment-taxonomy-support.php:80
+msgid "New Attachment Category Name"
+msgstr ""
+
+#: ../attachment-taxonomy-support.php:81
+msgid "Attachment Category"
+msgstr ""
+
+#: ../admin/admin.php:77
+msgid "Most Used"
+msgstr ""
+
+#: ../admin/admin.php:118
+#: ../admin/admin.php:147
+msgid "Manage"
+msgstr ""
+

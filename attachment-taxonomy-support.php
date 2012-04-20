@@ -29,6 +29,7 @@ class AttachmentTaxSupp {
 	 * Configure Plugin
 	 */
 	function init_plugin() {
+		load_plugin_textdomain( 'attachmenttaxsupp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 		$this->setup_taxonomies();
 		if ( is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 			require_once( $this->plugin_dir . '/admin/admin.php' );

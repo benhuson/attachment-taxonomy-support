@@ -44,17 +44,17 @@ class AttachmentTaxSupp {
 	function setup_taxonomies() {
 		$attachment_taxonomies = array();
 		$labels = array(
-			'name'              => _x( 'Attachment Tags', 'taxonomy general name' ),
-			'singular_name'     => _x( 'Attachment Tag', 'taxonomy singular name' ),
-			'search_items'      =>  __( 'Search Attachment Tags' ),
-			'all_items'         => __( 'All Attachment Tags' ),
-			'parent_item'       => __( 'Parent Attachment Tag' ),
-			'parent_item_colon' => __( 'Parent Attachment Tag:' ),
-			'edit_item'         => __( 'Edit Attachment Tag' ), 
-			'update_item'       => __( 'Update Attachment Tag' ),
-			'add_new_item'      => __( 'Add New Attachment Tag' ),
-			'new_item_name'     => __( 'New Attachment Tag Name' ),
-			'menu_name'         => __( 'Attachment Tags' ),
+			'name'              => _x( 'Attachment Tags', 'taxonomy general name', 'attachmenttaxsupp' ),
+			'singular_name'     => _x( 'Attachment Tag', 'taxonomy singular name', 'attachmenttaxsupp' ),
+			'search_items'      =>  __( 'Search Attachment Tags', 'attachmenttaxsupp' ),
+			'all_items'         => __( 'All Attachment Tags', 'attachmenttaxsupp' ),
+			'parent_item'       => __( 'Parent Attachment Tag', 'attachmenttaxsupp' ),
+			'parent_item_colon' => __( 'Parent Attachment Tag:', 'attachmenttaxsupp' ),
+			'edit_item'         => __( 'Edit Attachment Tag', 'attachmenttaxsupp' ), 
+			'update_item'       => __( 'Update Attachment Tag', 'attachmenttaxsupp' ),
+			'add_new_item'      => __( 'Add New Attachment Tag', 'attachmenttaxsupp' ),
+			'new_item_name'     => __( 'New Attachment Tag Name', 'attachmenttaxsupp' ),
+			'menu_name'         => __( 'Attachment Tags', 'attachmenttaxsupp' ),
 		);
 		$args = array(
 			'hierarchical' => false,
@@ -69,17 +69,17 @@ class AttachmentTaxSupp {
 			'args'      => $args
 		);
 		$labels = array(
-			'name'              => _x( 'Attachment Categories', 'taxonomy general name' ),
-			'singular_name'     => _x( 'Attachment Category', 'taxonomy singular name' ),
-			'search_items'      =>  __( 'Search Attachment Categories' ),
-			'all_items'         => __( 'All Attachment Categories' ),
-			'parent_item'       => __( 'Parent Attachment Category' ),
-			'parent_item_colon' => __( 'Parent Attachment Category:' ),
-			'edit_item'         => __( 'Edit Attachment Category' ), 
-			'update_item'       => __( 'Update Attachment Category' ),
-			'add_new_item'      => __( 'Add New Attachment Category' ),
-			'new_item_name'     => __( 'New Attachment Category Name' ),
-			'menu_name'         => __( 'Attachment Category' ),
+			'name'              => _x( 'Attachment Categories', 'taxonomy general name', 'attachmenttaxsupp' ),
+			'singular_name'     => _x( 'Attachment Category', 'taxonomy singular name', 'attachmenttaxsupp' ),
+			'search_items'      => __( 'Search Attachment Categories', 'attachmenttaxsupp' ),
+			'all_items'         => __( 'All Attachment Categories', 'attachmenttaxsupp' ),
+			'parent_item'       => __( 'Parent Attachment Category', 'attachmenttaxsupp' ),
+			'parent_item_colon' => __( 'Parent Attachment Category:', 'attachmenttaxsupp' ),
+			'edit_item'         => __( 'Edit Attachment Category', 'attachmenttaxsupp' ), 
+			'update_item'       => __( 'Update Attachment Category', 'attachmenttaxsupp' ),
+			'add_new_item'      => __( 'Add New Attachment Category', 'attachmenttaxsupp' ),
+			'new_item_name'     => __( 'New Attachment Category Name', 'attachmenttaxsupp' ),
+			'menu_name'         => __( 'Attachment Category', 'attachmenttaxsupp' ),
 		);
 		$args = array(
 			'hierarchical' => true,

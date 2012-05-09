@@ -56,8 +56,8 @@ class AttachmentTaxSupp_Admin {
 	 * Admin Enqueue Scripts
 	 */
 	function admin_enqueue_scripts() {
-		global $AttachmentTaxSupp;
-		if ( isset( $_GET['taxonomy'] ) && isset( $_GET['post_type'] ) && 'attachment' == $_GET['post_type'] ) {
+		global $AttachmentTaxSupp, $current_screen;
+		if ( ( $current_screen->id == 'media' && isset( $_GET['attachment_id'] ) ) || ( isset( $_GET['taxonomy'] ) && isset( $_GET['post_type'] ) && 'attachment' == $_GET['post_type'] ) ) {
 			wp_enqueue_script( 'media_taxonomies', plugins_url( dirname( $AttachmentTaxSupp->plugin_basename ) . '/admin/js/admin.js' ), array( 'jquery', 'suggest', 'post' ) );
 		}
 	}

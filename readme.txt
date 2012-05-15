@@ -3,7 +3,7 @@ Contributors: husobj
 Tags: taxonmies, taxonomy, attachment, attachments, media, categories, category, tag, tags, image, images
 Requires at least: 3.0
 Tested up to: 3.3.1
-Stable tag: 1.1
+Stable tag: 1.1.2
 
 Improved taxonomy support for media and attachments.
 
@@ -22,10 +22,26 @@ Upload the Attachment Taxonomy Support plugin to your WordPress plugins folder (
 
 == Changelog ==
 
+= 1.1.2 =
+
+* Ensure admin.js is loaded on media pages.
+* Added text domain to translation strings in setup_taxonomies().
+
+= 1.1.1 =
+
+* Add language support.
+* Enqueue scripts properly and only when required.
+* Remove unnecessary menu redirect.
+
 = 1.1 =
 
-* First version
+* Added media taxonomy menu items.
+* Added links to manage taxonomies.
+* Fix attachment taxonomies not saving if all checkboxes deselected.
+* Fix saving when editing multiple attachment in post popup.
+* Allow default taxonomies to be removed via 'attachmenttaxsupp_taxonomies' filter.
+* Added support for hierarchical taxonomies.
 
 = 1.0 =
 
-* First version
+* First version.

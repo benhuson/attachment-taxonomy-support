@@ -57,7 +57,8 @@ class AttachmentTaxSupp_Admin {
 	 */
 	function admin_enqueue_scripts() {
 		global $AttachmentTaxSupp, $current_screen;
-		if ( ( $current_screen->id == 'media' && isset( $_GET['attachment_id'] ) ) || ( isset( $_GET['taxonomy'] ) && isset( $_GET['post_type'] ) && 'attachment' == $_GET['post_type'] ) ) {
+		echo  $current_screen->id;
+		if ( ( $current_screen->id == 'media' ) || ( isset( $_GET['taxonomy'] ) && isset( $_GET['post_type'] ) && 'attachment' == $_GET['post_type'] ) ) {
 			wp_enqueue_script( 'media_taxonomies', plugins_url( dirname( $AttachmentTaxSupp->plugin_basename ) . '/admin/js/admin.js' ), array( 'jquery', 'suggest', 'post' ) );
 		}
 	}
@@ -153,6 +154,7 @@ class AttachmentTaxSupp_Admin {
 	 * @return array Form fields.
 	 */
 	function attachment_fields_to_edit( $form_fields, $post ) {
+		global $AttachmentTaxSupp, $current_screen;
 		foreach ( $form_fields as $key => $val ) {
 			if ( isset( $val['hierarchical'] ) && taxonomy_exists( $val['name'] ) ) {
 				$tax_name = esc_attr( $val['name'] );
@@ -244,6 +246,11 @@ class AttachmentTaxSupp_Admin {
 					$html .= '</div>';
 					$html .= '<p><a href="' . admin_url( '/edit-tags.php?taxonomy=' . $tax_name . '&post_type=attachment' ) . '">' . __( 'Manage', 'attachmenttaxsupp' ) . ' ' . $taxonomy->labels->name . '</a></p>';
 					$html .= wp_nonce_field( 'update_attachment', '_wpnonce_attachmenttaxsupp', true, false );
+					
+					if ( 'async-upload' == $current_screen->id ) {
+						$html .= '<script type="text/javascript">tagBox.init();</script>';
+					}
+					
 					$form_fields[$key]['input'] = 'html';
 					$form_fields[$key]['html'] = $html;
 				}

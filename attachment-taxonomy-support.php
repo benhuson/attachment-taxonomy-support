@@ -29,9 +29,13 @@ class AttachmentTaxSupp {
 	 * Configure Plugin
 	 */
 	function init_plugin() {
+		global $wp_version;
 		load_plugin_textdomain( 'attachmenttaxsupp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 		$this->setup_taxonomies();
-		if ( is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		
+		// Pre WordPress 3.5 admin compatibility
+		// Currently there is no way to edit an image's taxonomies in the media popup n WordPress 3.5+
+		if ( ( is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) && version_compare( $wp_version, '3.5.dev', '<' ) ) {
 			require_once( $this->plugin_dir . '/admin/admin.php' );
 			$this->admin = new AttachmentTaxSupp_Admin();
 		}

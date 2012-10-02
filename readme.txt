@@ -2,14 +2,14 @@
 Contributors: husobj
 Tags: taxonmies, taxonomy, attachment, attachments, media, categories, category, tag, tags, image, images
 Requires at least: 3.0
-Tested up to: 3.3.1
-Stable tag: 1.1.2
+Tested up to: 3.4.2
+Stable tag: 1.2
 
 Improved taxonomy support for media and attachments.
 
 == Description ==
 
-The Attachment Taxonomy Support provides better support for media and attachments in WordPress.
+The Attachment Taxonomy Support provides better support for media and attachments in WordPress versions before WordPress 3.5+.
 
 == Installation ==
 
@@ -21,6 +21,10 @@ Upload the Attachment Taxonomy Support plugin to your WordPress plugins folder (
 2. Media Popup
 
 == Changelog ==
+
+= 1.2 =
+
+* Disable admin functionality in WordPress 3.5+ as taxonomies are now supported natively and media workflow has changed.
 
 = 1.1.2 =
 

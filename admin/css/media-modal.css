@@ -1,0 +1,33 @@
+
+.media-sidebar .compat-attachment-fields ul.taxonomy-checklist {
+	background-color: #fff;
+	border: solid 1px #ddd;
+	color: #333;
+	font-size: 13px;
+	height: 12em;
+	line-height: 1.5em;
+	margin: 0;
+	overflow-y: scroll;
+	padding: 0 5px;
+}
+
+.media-sidebar .compat-attachment-fields ul.taxonomy-checklist ul {
+	margin-left: 18px;
+}
+
+.media-sidebar .compat-attachment-fields ul.taxonomy-checklist label {
+	font-style: normal;
+	font-size: 11px;
+	display: block;
+	margin: .2em 0;
+}
+
+.media-sidebar .compat-attachment-fields ul.taxonomy-checklist li,
+.media-sidebar .compat-attachment-fields ul.taxonomy-checklist input {
+	margin: 0;
+	position: relative;
+}
+
+.media-sidebar .compat-attachment-fields ul.taxonomy-checklist label input[type="checkbox"] {
+	vertical-align: text-bottom;
+}

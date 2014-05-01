@@ -35,8 +35,12 @@ class AttachmentTaxSupp {
 		
 		// Pre WordPress 3.5 admin compatibility
 		// Currently there is no way to edit an image's taxonomies in the media popup n WordPress 3.5+
-		if ( ( is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) && version_compare( $wp_version, '3.5.dev', '<' ) ) {
-			require_once( $this->plugin_dir . '/admin/admin-legacy.php' );
+		if ( ( is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) ) {
+			if ( version_compare( $wp_version, '3.5.dev', '<' ) ) {
+				require_once( $this->plugin_dir . '/admin/admin-legacy.php' );
+			} else {
+				require_once( $this->plugin_dir . '/admin/admin.php' );
+			}
 			$this->admin = new AttachmentTaxSupp_Admin();
 		}
 	}

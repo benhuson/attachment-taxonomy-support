@@ -1,4 +1,5 @@
 
+.media-modal .attachment-info ul.taxonomy-checklist,
 .media-sidebar .compat-attachment-fields ul.taxonomy-checklist {
 	background-color: #fff;
 	border: solid 1px #ddd;
@@ -11,10 +12,12 @@
 	padding: 0 5px;
 }
 
+.media-modal .attachment-info ul.taxonomy-checklist ul,
 .media-sidebar .compat-attachment-fields ul.taxonomy-checklist ul {
 	margin-left: 18px;
 }
 
+.media-modal .attachment-info ul.taxonomy-checklist label,
 .media-sidebar .compat-attachment-fields ul.taxonomy-checklist label {
 	font-style: normal;
 	font-size: 11px;
@@ -22,12 +25,15 @@
 	margin: .2em 0;
 }
 
+.media-modal .attachment-info ul.taxonomy-checklist li,
 .media-sidebar .compat-attachment-fields ul.taxonomy-checklist li,
+.media-modal .attachment-info ul.taxonomy-checklist input,
 .media-sidebar .compat-attachment-fields ul.taxonomy-checklist input {
 	margin: 0;
 	position: relative;
 }
 
+.media-modal .attachment-info ul.taxonomy-checklist label input[type="checkbox"],
 .media-sidebar .compat-attachment-fields ul.taxonomy-checklist label input[type="checkbox"] {
 	vertical-align: text-bottom;
 }

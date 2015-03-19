@@ -111,6 +111,13 @@ class AttachmentTaxSupp_Admin {
 				}
 			}
 		}
+
+		// Add taxonomy checkbox nonce field
+		$form_fields['nonce_attachmenttaxsupp'] = array(
+			'value' => wp_create_nonce( 'update_attachment' ),
+			'input' => 'hidden'
+		);
+
 		return $form_fields;
 	}
 
@@ -131,6 +138,25 @@ class AttachmentTaxSupp_Admin {
 			'taxonomy'      => $field['name'],
 			'walker'        => $wp_terms_checklist_walker
 		) );
+
+		$checklist = '';
+
+		// Get all taxonomy terms
+		$all_terms = get_terms( $field['name'], array(
+			'hide_empty' => false
+		) );
+
+		// Get attachment terms
+		$post_terms = wp_get_post_terms( $post->ID, $field['name'], array( 'fields' => 'ids' ) );
+
+		// Create checkbox list
+		if ( $all_terms && ! is_wp_error( $all_terms ) ) {
+			foreach ( $all_terms as $term ) {
+				$selected_term = in_array( $term->term_id, $post_terms ) ? $term->term_id : 0;
+				$checklist .= sprintf( '<li id="%s-%s"><label class="selectit"><input value="%s" type="checkbox" name="attachments[%s][tax_%s][%s]" id="in-%s-%s"%s> %s</label></li>', $term->taxonomy, $term->term_id, esc_attr( $term->name ), $post->ID, $term->taxonomy, $term->term_id, $term->taxonomy, $term->term_id, checked( $term->term_id, $selected_term, false ), esc_html( $term->name ) );
+			}
+		}
+
 		$field['taxonomy_checkboxes'] = '<ul class="taxonomy-checklist">' . $checklist . '</ul>';
 		return $field;
 	}
@@ -242,43 +268,56 @@ class AttachmentTaxSupp_Admin {
 		}
 		return $form_fields;
 	}
-	
+
 	/**
 	 * Save Image Form
 	 *
-	 * @todo If some checkboxes are checked and you uncheck all on a media page, it doesn't save
-	 *
-	 * @param object $post Post.
-	 * @param object $attachment Attchment.
-	 * @return object Post.
+	 * @param   object  $post        Post.
+	 * @param   object  $attachment  Attachment.
+	 * @return  object               Post.
 	 */
 	function attachment_fields_to_save( $post, $attachment ) {
-		
-		if ( empty( $_POST ) || !wp_verify_nonce( $_POST['_wpnonce_attachmenttaxsupp'], 'update_attachment' ) )
-			return $post;
-	
-		if ( isset( $_POST['tax_input'] ) && is_array( $_POST['tax_input'] ) ) {
-			foreach ( $_POST['tax_input'] as $tax => $arr ) {
-				if ( taxonomy_exists( $tax ) ) {
-					$val = null;
-					if ( isset( $arr[$post['ID']] ) )
-						$val = array_map( 'absint', $arr[$post['ID']] );
-					wp_set_object_terms( $post['ID'], $val, $tax );
-				}
-			}
-		} else {
-			$taxes = get_taxonomies( array(
-				'show_ui' => true,
-				'_builtin' => false )
-			);
-			foreach ( $taxes as $tax ) {
-				wp_set_object_terms( $post['ID'], array(), $tax );
-			}
-		}
-		
-		return $post;
-	}
-	
-}
 
-?>
+		// If no post variables, bail.
+		if ( empty( $_POST ) ) {
+			return $post;
+		}
+
+		// If attachment data is posted...
+		if ( isset( $_POST['post_id'] ) && isset( $_POST['attachments'] ) && isset( $_POST['action'] ) && 'save-attachment-compat' == $_POST['action'] ) {
+
+			// Loop through data for each attachment.
+			foreach ( $_POST['attachments'] as $attachment_id => $attachment_data ) {
+
+				// If attachment data passes nonce test...
+				if ( wp_verify_nonce( $attachment_data['nonce_attachmenttaxsupp'], 'update_attachment' ) ) {
+
+					// Get all public taxonomies with UI support.
+					$taxes = get_taxonomies( array(
+						'show_ui' => true,
+						'_builtin' => false )
+					);
+
+					// Limit to attachment taxonomies.
+					$taxes = array_intersect( $taxes, get_object_taxonomies( 'attachment' ) );
+
+					// Save terms for each taxonomy.
+					foreach ( $taxes as $tax ) {
+						if ( isset( $attachment_data[ 'tax_' . $tax ] ) && is_array( $attachment_data[ 'tax_' . $tax ] ) ) {
+							wp_set_object_terms( $post['ID'], array_keys( $attachment_data[ 'tax_' . $tax ] ), $tax );
+						} else {
+							wp_set_object_terms( $post['ID'], array(), $tax );
+						}
+					}
+
+				}
+
+			}
+
+		}
+
+		return $post;
+
+	}
+
+}

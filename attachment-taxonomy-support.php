@@ -19,7 +19,7 @@ class AttachmentTaxSupp {
 	/**
 	 * Configure Plugin
 	 */
-	function AttachmentTaxSupp() {
+	function __construct() {
 		$this->plugin_dir = dirname( __FILE__ );
 		$this->plugin_basename = plugin_basename( __FILE__ );
 		add_action( 'init', array( $this, 'init_plugin' ), 5 );
